@@ -34,6 +34,10 @@ services:
         - "orderer.example.com:46.101.192.236"
         - "peer0.org1.example.com:46.101.192.236"
         - "peer1.org1.example.com:178.128.204.29"
+    external_links:
+        - "orderer.example.com:orderer.example.com"
+        - "peer0.org1.example.com:peer0.org1.example.com"
+        - "peer1.org1.example.com:peer1.org1.example.com"
     ports:
       - "12051:7051"
       - "12053:7053"
