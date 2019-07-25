@@ -185,7 +185,7 @@ function generateChannelArtifacts() {
 
 # Generate the needed certificates, the genesis block and start the network.
 function networkUp() {
-  docker-compose -f $COMPOSE_FILE up -d 2>&1
+  docker-compose -f ${COMPOSE_FILE} up -d 2>&1
   
   if [ $? -ne 0 ]; then
     echo "ERROR !!!! Unable to start network"
@@ -250,6 +250,41 @@ fi
 MODE=$1
 shift
 
+while getopts "h?m:c:t:d:f:s:l:i:a?" opt; do
+  case "$opt" in
+  h | \?)
+    printHelp
+    exit 0
+    ;;
+  c)
+    CHANNEL_NAME=$OPTARG
+    ;;
+  t)
+    CLI_TIMEOUT=$OPTARG
+    ;;
+  d)
+    CLI_DELAY=$OPTARG
+    ;;
+  f)
+    COMPOSE_FILE=$OPTARG
+    ;;
+  s)
+    IF_COUCHDB=$OPTARG
+    ;;
+  l)
+    LANGUAGE=$OPTARG
+    ;;
+  i)
+    IMAGETAG=$(go env GOARCH)"-"$OPTARG
+    ;;
+  a)  IF_CAS=1
+   ;;
+  v)
+    VERBOSE=true
+    ;;
+  esac
+done
+
 #Create the network using docker compose
 if [ "${MODE}" == "up" ]; then
   networkUp
@@ -266,15 +301,3 @@ else
   printHelp
   exit 1
 fi
-
-while getopts "h?m:c:t:d:f:s:l:i:a?" opt; do
-  case "$opt" in
-  h | \?)
-    printHelp
-    exit 0
-    ;;
-  f)
-    COMPOSE_FILE=$OPTARG
-    ;;
-  esac
-done
