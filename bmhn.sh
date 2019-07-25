@@ -51,7 +51,7 @@ function replacePrivateKey() {
   fi
 
   # Copy the org1 & org2 templates to the files that will be modified to add the private key
-  cp docker-compose-template.yaml docker-compose.yaml
+  cp docker-compose-serv1-template.yaml docker-compose-serv1.yaml
 
   # The next steps will replace the template's contents with the
   # actual values of the private key file names for the CA.
@@ -59,11 +59,11 @@ function replacePrivateKey() {
   cd crypto-config/peerOrganizations/org1.example.com/ca/
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
-  sed $OPTS "s/CA1_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose.yaml
+  sed $OPTS "s/CA1_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-serv1.yaml
   
   # If MacOSX, remove the temporary backup of the docker-compose file
   if [ "$ARCH" == "Darwin" ]; then
-    rm docker-compose.yamlt
+    rm docker-compose-serv1.yamlt
   fi
 }
 
@@ -209,7 +209,7 @@ function networkDown() {
   if [ "$MODE" != "restart" ]; then
     # Bring down the network, deleting the volumes
     #Delete any ledger backups
-    docker run -v $PWD:/tmp/fabric-multi-network --rm hyperledger/fabric-tools:$IMAGETAG rm -Rf /tmp/first-network/ledgers-backup
+    docker run -v $PWD:/tmp/fabric-multi-network --rm hyperledger/fabric-tools:latest rm -Rf /tmp/first-network/ledgers-backup
     #Cleanup the chaincode containers
     clearContainers
     # remove orderer block and other channel configuration transactions and certs
@@ -239,7 +239,7 @@ CLI_DELAY=3
 # channel name defaults to "mychannel"
 CHANNEL_NAME="mychannel"
 
-COMPOSE_FILE=docker-compose.yaml
+COMPOSE_FILE=docker-compose-serv1.yaml
 
 EXPMODE="Generating certs and genesis block for"
 
