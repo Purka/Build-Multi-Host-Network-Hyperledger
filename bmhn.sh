@@ -266,3 +266,15 @@ else
   printHelp
   exit 1
 fi
+
+while getopts "h?m:c:t:d:f:s:l:i:a?" opt; do
+  case "$opt" in
+  h | \?)
+    printHelp
+    exit 0
+    ;;
+  f)
+    COMPOSE_FILE=$OPTARG
+    ;;
+  esac
+done
